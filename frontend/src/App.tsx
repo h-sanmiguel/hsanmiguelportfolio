@@ -1,6 +1,7 @@
 import { Mail, Phone, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook, Quote } from 'lucide-react'
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from './context/ThemeContext'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ChatBot } from './components/ChatBot'
@@ -19,6 +20,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>
+      <Analytics />
     </Router>
   )
 }
