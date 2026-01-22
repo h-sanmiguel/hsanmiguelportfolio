@@ -19,8 +19,8 @@ function App() {
           <Route path="/tech-stack" element={<TechStackPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <Analytics />
       </ThemeProvider>
-      <Analytics />
     </Router>
   )
 }
