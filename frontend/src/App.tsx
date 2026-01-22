@@ -1,4 +1,4 @@
-import { Mail, Phone, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook } from 'lucide-react'
+import { Mail, Phone, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook, Quote } from 'lucide-react'
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
@@ -24,6 +24,7 @@ function App() {
 const HomePage = () => {
   const [isHoveringProfile, setIsHoveringProfile] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
+  const [dailyQuotes, setDailyQuotes] = React.useState<Array<{ text: string; author: string }>>([])
 
   React.useEffect(() => {
     // Simulate loading time - remove this if you have real data loading
@@ -31,8 +32,58 @@ const HomePage = () => {
     return () => clearTimeout(timer)
   }, [])
 
+  React.useEffect(() => {
+    const fetchDailyQuotes = async () => {
+      try {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'mixtral-8x7b-32768',
+            messages: [
+              {
+                role: 'user',
+                content: 'Generate 3 unique and inspiring motivational quotes for today. Format each quote on a new line as: "Quote text" — Author Name. Only provide the 3 quotes, nothing else.',
+              },
+            ],
+            temperature: 0.8,
+            max_tokens: 500,
+          }),
+        })
+
+        const data = await response.json()
+        const content = data.choices[0].message.content
+
+        // Parse the quotes from the response
+        const quoteLines = content.split('\n').filter((line: string) => line.trim().length > 0)
+        const parsedQuotes = quoteLines.map((line: string) => {
+          const match = line.match(/"([^"]+)"\s*[—-]\s*(.+)/)
+          if (match) {
+            return { text: match[1], author: `— ${match[2].trim()}` }
+          }
+          return null
+        }).filter((q: any) => q !== null)
+
+        setDailyQuotes(parsedQuotes.slice(0, 3))
+      } catch (error) {
+        console.error('Failed to fetch quotes:', error)
+        // Fallback quotes
+        setDailyQuotes([
+          { text: 'The only way to do great work is to love what you do.', author: '— Steve Jobs' },
+          { text: "Don't watch the clock; do what it does. Keep going.", author: '— Sam Levenson' },
+          { text: 'The future belongs to those who believe in the beauty of their dreams.', author: '— Eleanor Roosevelt' },
+        ])
+      }
+    }
+
+    fetchDailyQuotes()
+  }, [])
+
   return (
-      <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
+    <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
         <ChatBot />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         {/* Profile Header */}
@@ -139,6 +190,115 @@ const HomePage = () => {
                 </div>
               </div>
             </section>
+            )}
+
+            {/* Projects Section */}
+            {isLoading ? <SectionSkeleton /> : (
+            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in">
+              <div className="flex justify-between items-center gap-3 mb-4">
+                <h2 className="text-xl font-bold flex items-center gap-3 text-black dark:text-white">
+                  <Code size={22} className="text-indigo-600 dark:text-indigo-400" />
+                  Projects
+                </h2>
+                {[
+                  {
+                    title: 'Appoint - Appointment Booking',
+                    description: 'A modern appointment booking application with video call and call features for scheduling and management.',
+                    tech: ['React', 'Vite', 'JavaScript', 'Tailwind CSS'],
+                    link: 'https://appoint-ptpt.onrender.com/'
+                  },
+                ].length > 3 && (
+                  <a href="#" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-medium transition-colors cursor-pointer hover:underline">
+                    View All
+                  </a>
+                )}
+              </div>
+              
+              <div className="space-y-4">
+                {[
+                  {
+                    title: 'Appoint - Appointment Booking',
+                    description: 'A modern appointment booking application with video call and call features for scheduling and management.',
+                    tech: ['React', 'Vite', 'JavaScript', 'Tailwind CSS'],
+                    link: 'https://appoint-ptpt.onrender.com/'
+                  },
+                ].map((project, idx) => (
+                  <div key={idx} className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 hover:border-indigo-500 dark:hover:border-indigo-400 transition">
+                    <div className="flex justify-between items-start gap-2 mb-2">
+                      <h3 className="font-semibold text-sm text-black dark:text-white">{project.title}</h3>
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">{project.description}</p>
+                    <div className="flex gap-2 flex-wrap mb-3">
+                      {project.tech.map((t) => (
+                        <span key={t} className="px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded text-xs font-medium">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 text-xs font-medium transition-colors cursor-pointer">
+                      View Project →
+                    </a>
+                  </div>
+                ))}
+              </div>
+            </section>
+            )}
+
+            {/* Testimonials Section */}
+            {isLoading ? <SectionSkeleton /> : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Testimonials Column */}
+              <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-black dark:text-white">
+                  <Quote size={22} className="text-purple-600 dark:text-purple-400" />
+                  Testimonials
+                </h2>
+                
+                <div className="space-y-4">
+                  {[].length > 0 ? (
+                    [].map((testimonial, idx) => (
+                      <div key={idx} className="border-l-4 border-purple-500 dark:border-purple-400 pl-4 py-2 bg-white dark:bg-gray-800 p-3 rounded">
+                        <p className="text-xs text-gray-700 dark:text-gray-300 italic mb-2">\"{testimonial.quote}\"</p>
+                        <p className="text-xs font-semibold text-gray-800 dark:text-gray-200\">{testimonial.author}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-400\">{testimonial.role}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-gray-600 dark:text-gray-400 italic">No testimonials yet. Check back soon!</p>
+                  )}
+                </div>
+              </section>
+
+              {/* Motivational Quotes Column */}
+              <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in">
+                <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-black dark:text-white">
+                  <Quote size={22} className="text-pink-600 dark:text-pink-400" />
+                  Quotes for Inspiration
+                </h2>
+                
+                <div className="space-y-3">
+                  {dailyQuotes.length > 0 ? (
+                    dailyQuotes.map((quote, idx) => (
+                      <div key={idx} className="border-l-4 border-pink-500 dark:border-pink-400 pl-4 py-2 bg-white dark:bg-gray-800 p-3 rounded">
+                        <p className="text-xs text-gray-700 dark:text-gray-300 italic mb-2\">{quote.text}</p>
+                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400\">{quote.author}</p>
+                      </div>
+                    ))
+                  ) : (
+                    [
+                      { text: 'The only way to do great work is to love what you do.', author: '— Steve Jobs' },
+                      { text: "Don't watch the clock; do what it does. Keep going.", author: '— Sam Levenson' },
+                      { text: 'The future belongs to those who believe in the beauty of their dreams.', author: '— Eleanor Roosevelt' },
+                    ].map((quote, idx) => (
+                      <div key={idx} className="border-l-4 border-pink-500 dark:border-pink-400 pl-4 py-2 bg-white dark:bg-gray-800 p-3 rounded">
+                        <p className="text-xs text-gray-700 dark:text-gray-300 italic mb-2\">{quote.text}</p>
+                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400\">{quote.author}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </section>
+            </div>
             )}
           </div>
 
@@ -254,9 +414,16 @@ const HomePage = () => {
         </section>
         )}
         </div>
-        </div>
+
+        {/* Footer Section */}
+        <footer className="mt-16 pt-8 border-t border-gray-300 dark:border-gray-800">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+            <p>&copy; 2026 Hans San Miguel. All rights reserved.</p>
+          </div>
+        </footer>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
 export default App
