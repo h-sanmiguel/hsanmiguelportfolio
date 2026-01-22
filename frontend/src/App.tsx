@@ -123,7 +123,7 @@ const HomePage = () => {
                 <Mail size={14} />
                 Send Email
               </a>
-              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
+              <a href="/Hans_Ernie_V._San_Miguel_Resume.pdf" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
                 <Briefcase size={14} />
                 View Full Resume
               </a>

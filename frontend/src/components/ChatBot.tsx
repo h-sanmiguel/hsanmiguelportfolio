@@ -45,7 +45,7 @@ export const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Hi! 👋 Ask me anything about Hans\'s skills and experience.',
+      text: 'Hello. I\'m here to assist you with information about Hans San Miguel\'s skills, experience, and professional background. How can I help you?',
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -97,39 +97,32 @@ export const ChatBot: React.FC = () => {
             messages: [
               {
                 role: 'system',
-                content: `You are Hans San Miguel Chat Assistant. Here's information about Hans:
+                content: `You are a professional assistant representing Hans San Miguel, a frontend developer and UI/UX designer. Provide responses that are informative, concise, and professional.
 
-ABOUT:
-Hans is an aspiring frontend web developer and UI/UX designer passionate about creating beautiful, functional, and user-centered digital experiences. He is committed to mastering modern web development technologies and design principles. His focus is on building responsive web applications using React, TypeScript, and Tailwind CSS. He believes great design is about understanding user needs and creating intuitive interfaces that solve real problems while delivering exceptional user experiences. He is currently in college, continuously learning best practices, exploring new technologies, and working on projects that challenge him to grow as a developer.
+ABOUT HANS:
+Hans is a frontend web developer and UI/UX designer with a passion for creating functional, user-centered digital experiences. He specializes in building responsive web applications and is committed to delivering high-quality solutions. His expertise spans modern web development technologies and design principles, with a focus on clean code and intuitive user interfaces.
 
-TECH STACK:
+TECHNICAL EXPERTISE:
 Frontend: JavaScript, TypeScript, React, Next.js, Tailwind CSS, Vite, HTML5, CSS3
 Tools & Design: Figma, Trello, Git, VS Code, Chrome DevTools, Webpack, npm, GitHub
 
-EXPERIENCE:
-- BS Information Technology at Ateneo de Naga University (2023 - Current)
-- Wrote My First Code - Started his coding journey (2023)
+PROFESSIONAL BACKGROUND:
+- Education: BS Information Technology at Ateneo de Naga University (2023 - Present)
+- Certifications: IT Essentials from Cisco Networking Academy (2026)
 
-CERTIFICATIONS:
-- IT Essentials from Cisco Networking Academy (2026)
-
-SOCIAL LINKS & CONTACT:
-When providing links, ALWAYS format them on separate lines with clear labels:
-
+CONTACT & PROFESSIONAL LINKS:
 GitHub: https://github.com/h-sanmiguel
 LinkedIn: https://www.linkedin.com/in/hans-san-miguel-2404a1296/
-Instagram: https://www.instagram.com/hansprknbeans/
-Facebook: https://www.facebook.com/hansprknbeans
 Email: sanmiguelhansernie@gmail.com
-Schedule a Call: https://calendly.com/sanmiguelhansernie/30min
+Schedule a Meeting: https://calendly.com/sanmiguelhansernie/30min
 
-Instructions:
-- IMPORTANT: Each link must be on its own line with the platform name, colon, and URL
-- Use line breaks to separate each link
-- When users ask about Hans, refer to this information
-- Keep responses friendly, concise, and professional
-- If asked about contact or how to reach out, provide links in the organized format above with line breaks
-- If asked about skills or experience, reference the tech stack and experience sections`,
+RESPONSE GUIDELINES:
+- Maintain a professional and courteous tone
+- Provide clear, accurate information about Hans's skills and experience
+- Keep responses concise and focused
+- Format links on separate lines with clear labels
+- For inquiries beyond Hans's expertise, politely redirect to contact information
+- Be helpful and address questions thoroughly`,
               },
               {
                 role: 'user',
@@ -183,20 +176,37 @@ Instructions:
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 px-4 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-lg hover:shadow-xl transition z-40 flex items-center gap-2 font-medium cursor-pointer hover:scale-110 active:scale-95"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 px-3 sm:px-4 py-2 sm:py-3 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-lg hover:shadow-xl transition z-40 flex items-center gap-2 font-medium cursor-pointer hover:scale-110 active:scale-95 text-sm sm:text-base"
           aria-label="Open chat"
         >
-          <MessageCircle size={20} />
-          <span>Chat with Hans</span>
+          <MessageCircle size={18} className="sm:w-5 sm:h-5" />
+          <span className="hidden sm:inline">Chat with Hans</span>
+          <span className="sm:hidden">Chat</span>
         </button>
       )}
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[550px] bg-white dark:bg-gray-900 rounded-2xl shadow-xl flex flex-col z-50 overflow-hidden">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 w-[calc(100vw-32px)] sm:w-96 h-[calc(100vh-100px)] sm:h-[550px] bg-white dark:bg-gray-900 rounded-2xl shadow-xl flex flex-col z-50 overflow-hidden">
           {/* Header */}
-          <div className="flex justify-between items-center p-6 border-b border-gray-100 dark:border-gray-800">
-            <h3 className="font-semibold text-gray-900 dark:text-white">Ask Hans</h3>
+          <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-100 dark:border-gray-800">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="relative">
+                <img
+                  src="/hansprofile.jpg"
+                  alt="Hans San Miguel"
+                  className="w-8 sm:w-10 h-8 sm:h-10 rounded-full object-cover"
+                />
+                <div className="absolute bottom-0 right-0 w-2 sm:w-3 h-2 sm:h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
+              </div>
+              <div className="hidden sm:block">
+                <h3 className="font-semibold text-gray-900 dark:text-white">Hans San Miguel</h3>
+                <p className="text-xs text-green-600 dark:text-green-400">Online</p>
+              </div>
+              <div className="sm:hidden">
+                <h3 className="font-semibold text-sm text-gray-900 dark:text-white">Hans San Miguel</h3>
+              </div>
+            </div>
             <button
               onClick={() => setIsOpen(false)}
               className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition cursor-pointer hover:scale-110 active:scale-95"
@@ -207,14 +217,21 @@ Instructions:
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-2 sm:space-y-3">
             {messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                className={`flex items-end gap-2 ${msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
+                {msg.sender === 'ai' && (
+                  <img
+                    src="/hansprofile.jpg"
+                    alt="Hans"
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                  />
+                )}
                 <div
-                  className={`max-w-xs px-4 py-2 rounded-lg text-sm ${
+                  className={`max-w-xs sm:max-w-xs px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm ${
                     msg.sender === 'user'
                       ? 'bg-black dark:bg-white text-white dark:text-black'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
@@ -225,9 +242,14 @@ Instructions:
               </div>
             ))}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-lg">
-                  <div className="flex space-x-2">
+              <div className="flex items-end gap-2">
+                <img
+                  src="/hansprofile.jpg"
+                  alt="Hans"
+                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                />
+                <div className="bg-gray-100 dark:bg-gray-800 px-3 sm:px-4 py-2 rounded-lg">
+                  <div className="flex space-x-1 sm:space-x-2">
                     <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
                     <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                     <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
@@ -246,14 +268,14 @@ Instructions:
           {/* Input Form */}
           <form
             onSubmit={sendMessage}
-            className="p-6 border-t border-gray-100 dark:border-gray-800 flex gap-2"
+            className="p-4 sm:p-6 border-t border-gray-100 dark:border-gray-800 flex gap-2"
           >
             <input
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-700"
+              className="flex-1 px-3 sm:px-4 py-2 text-sm bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-300 dark:focus:ring-gray-700"
               disabled={isLoading}
             />
             <button
