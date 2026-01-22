@@ -1,4 +1,4 @@
-import { Mail, Phone, Users, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook } from 'lucide-react'
+import { Mail, Phone, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook } from 'lucide-react'
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
@@ -70,10 +70,10 @@ const HomePage = () => {
                 <Mail size={14} />
                 Send Email
               </a>
-              <button className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
-                <Users size={14} />
-                Join Community
-              </button>
+              <a href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
+                <Briefcase size={14} />
+                View Full Resume
+              </a>
             </div>
           </div>
         </div>
@@ -221,10 +221,19 @@ const HomePage = () => {
           {/* Certifications Section */}
           {isLoading ? <SectionSkeleton /> : (
           <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors lg:col-span-2 card-hover fade-in">
-          <h2 className="text-xl font-bold mb-3 flex items-center gap-3 text-black dark:text-white">
-            <Code size={22} className="text-amber-600 dark:text-amber-400" />
-            Certifications
-          </h2>
+          <div className="flex justify-between items-center gap-3 mb-3">
+            <h2 className="text-xl font-bold flex items-center gap-3 text-black dark:text-white">
+              <Code size={22} className="text-amber-600 dark:text-amber-400" />
+              Certifications
+            </h2>
+            {[
+              { title: 'IT Essentials', issuer: 'Cisco Networking Academy', year: '2026' },
+            ].length > 4 && (
+              <Link to="/certifications" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-medium transition-colors cursor-pointer hover:underline">
+                View All
+              </Link>
+            )}
+          </div>
           
           <div className="space-y-2">
             {[
