@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ChatBot } from './components/ChatBot'
 import { TechStackPage } from './pages/TechStackPage'
+import { ProfileSkeleton, SectionSkeleton } from './components/SkeletonLoader'
 import './App.css'
 
 function App() {
@@ -22,12 +23,20 @@ function App() {
 
 const HomePage = () => {
   const [isHoveringProfile, setIsHoveringProfile] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    // Simulate loading time - remove this if you have real data loading
+    const timer = setTimeout(() => setIsLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
       <div className="min-h-screen bg-white dark:bg-black text-black dark:text-white transition-colors">
         <ChatBot />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
         {/* Profile Header */}
+        {isLoading ? <ProfileSkeleton /> : (
         <div className="flex flex-row gap-6 mb-12 items-start relative">
           <div className="absolute top-0 right-0">
             <ThemeToggle />
@@ -35,7 +44,7 @@ const HomePage = () => {
           <img 
             src={isHoveringProfile ? "/67pic.gif" : "/hansprofile.jpg"} 
             alt="Hans San Miguel" 
-            className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-xl flex-shrink-0 shadow-lg object-cover cursor-pointer transition-all"
+            className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-xl flex-shrink-0 shadow-lg object-cover cursor-pointer transition-all float"
             onMouseEnter={() => setIsHoveringProfile(true)}
             onMouseLeave={() => setIsHoveringProfile(false)}
           />
@@ -53,14 +62,14 @@ const HomePage = () => {
             <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mt-3 mb-6 font-medium">Frontend Developer • UI/UX Design</p>
             
             <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-              <button className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
+              <a href="https://calendly.com/sanmiguelhansernie/30min" target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
                 <Phone size={14} />
                 Schedule a Call
-              </button>
-              <button className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
+              </a>
+              <a href="mailto:sanmiguelhansernie@gmail.com" className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
                 <Mail size={14} />
                 Send Email
-              </button>
+              </a>
               <button className="px-3 py-1.5 sm:px-4 sm:py-1.5 border border-gray-400 dark:border-gray-600 rounded-lg text-xs sm:text-sm hover:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition flex items-center justify-center gap-2 bg-white dark:bg-transparent text-black dark:text-white cursor-pointer hover:scale-105 active:scale-95 active:shadow-inner">
                 <Users size={14} />
                 Join Community
@@ -68,12 +77,14 @@ const HomePage = () => {
             </div>
           </div>
         </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* About Section */}
-            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors">
+            {isLoading ? <SectionSkeleton /> : (
+            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-3 text-black dark:text-white">
                 <Code size={22} className="text-blue-600 dark:text-blue-400" />
                 About
@@ -90,9 +101,11 @@ const HomePage = () => {
                 </p>
               </div>
             </section>
+            )}
 
             {/* Tech Stack Section */}
-            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors">
+            {isLoading ? <SectionSkeleton /> : (
+            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in">
               <div className="flex justify-between items-center gap-3 mb-4">
                 <h2 className="text-xl font-bold flex items-center gap-3 text-black dark:text-white">
                   <Code size={22} className="text-purple-600 dark:text-purple-400" />
@@ -126,12 +139,14 @@ const HomePage = () => {
                 </div>
               </div>
             </section>
+            )}
           </div>
 
           {/* Right Column */}
           <div className="space-y-6">
             {/* Experience Section */}
-            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors">
+            {isLoading ? <SectionSkeleton /> : (
+            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors card-hover fade-in">
               <h2 className="text-xl font-bold mb-3 flex items-center gap-3 text-black dark:text-white">
                 <Briefcase size={22} className="text-green-600 dark:text-green-400" />
                 Experience
@@ -155,9 +170,11 @@ const HomePage = () => {
                 ))}
               </div>
             </section>
+            )}
 
             {/* Social Links */}
-            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors">
+            {isLoading ? <SectionSkeleton /> : (
+            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors card-hover fade-in">
               <h2 className="text-xl font-bold mb-3 flex items-center gap-3 text-black dark:text-white">
                 <Link2 size={22} className="text-pink-600 dark:text-pink-400" />
                 Social Links
@@ -169,6 +186,12 @@ const HomePage = () => {
                     <Linkedin size={16} className="text-[#0A66C2]" />
                   </div>
                   <span className="font-medium">LinkedIn</span>
+                </a>
+                <a href="https://github.com/h-sanmiguel" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition cursor-pointer group">
+                  <div className="p-1.5 bg-gray-200 dark:bg-gray-800 rounded-lg group-hover:bg-gray-300 dark:group-hover:bg-gray-700 transition">
+                    <Github size={16} />
+                  </div>
+                  <span className="font-medium">GitHub</span>
                 </a>
                 <a href="https://www.instagram.com/hansprknbeans/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 transition cursor-pointer group">
                   <div className="p-1.5 bg-gray-200 dark:bg-gray-800 rounded-lg group-hover:bg-pink-100 dark:group-hover:bg-pink-900 transition">
@@ -190,12 +213,14 @@ const HomePage = () => {
                 </a>
               </div>
             </section>
+            )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
           {/* Certifications Section */}
-          <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors lg:col-span-2">
+          {isLoading ? <SectionSkeleton /> : (
+          <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-5 transition-colors lg:col-span-2 card-hover fade-in">
           <h2 className="text-xl font-bold mb-3 flex items-center gap-3 text-black dark:text-white">
             <Code size={22} className="text-amber-600 dark:text-amber-400" />
             Certifications
@@ -218,6 +243,7 @@ const HomePage = () => {
             ))}
           </div>
         </section>
+        )}
         </div>
         </div>
       </div>

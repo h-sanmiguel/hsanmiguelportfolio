@@ -10,6 +10,36 @@ interface Message {
   timestamp: Date
 }
 
+// Function to parse and render text with clickable links and line breaks
+const renderMessageWithLinks = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+  
+  return text.split('\n').map((line, lineIndex) => {
+    const parts = line.split(urlRegex)
+    
+    return (
+      <div key={lineIndex}>
+        {parts.map((part, index) => {
+          if (urlRegex.test(part)) {
+            return (
+              <a
+                key={index}
+                href={part}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300 transition cursor-pointer break-all"
+              >
+                {part}
+              </a>
+            )
+          }
+          return <span key={index}>{part}</span>
+        })}
+      </div>
+    )
+  })
+}
+
 export const ChatBot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
@@ -67,7 +97,39 @@ export const ChatBot: React.FC = () => {
             messages: [
               {
                 role: 'system',
-                content: 'You are Hans San Miguel\'s portfolio AI assistant. Hans is a frontend web developer and UI/UX designer currently a student. He specializes in React, TypeScript, Tailwind CSS, and Vite. He is passionate about creating beautiful, functional, and user-centered digital experiences. He focuses on building responsive web applications and combines technical expertise with design thinking. He is committed to writing clean, maintainable code and constantly learning new technologies and best practices. Help answer questions about his skills, experience, projects, and design philosophy. Keep responses concise and friendly.',
+                content: `You are Hans San Miguel's portfolio AI assistant. Here's information about Hans:
+
+ABOUT:
+Hans is an aspiring frontend web developer and UI/UX designer passionate about creating beautiful, functional, and user-centered digital experiences. He is committed to mastering modern web development technologies and design principles. His focus is on building responsive web applications using React, TypeScript, and Tailwind CSS. He believes great design is about understanding user needs and creating intuitive interfaces that solve real problems while delivering exceptional user experiences. He is currently in college, continuously learning best practices, exploring new technologies, and working on projects that challenge him to grow as a developer.
+
+TECH STACK:
+Frontend: JavaScript, TypeScript, React, Next.js, Tailwind CSS, Vite, HTML5, CSS3
+Tools & Design: Figma, Trello, Git, VS Code, Chrome DevTools, Webpack, npm, GitHub
+
+EXPERIENCE:
+- BS Information Technology at Ateneo de Naga University (2023 - Current)
+- Wrote My First Code - Started his coding journey (2023)
+
+CERTIFICATIONS:
+- IT Essentials from Cisco Networking Academy (2026)
+
+SOCIAL LINKS & CONTACT:
+When providing links, ALWAYS format them on separate lines with clear labels:
+
+GitHub: https://github.com/h-sanmiguel
+LinkedIn: https://www.linkedin.com/in/hans-san-miguel-2404a1296/
+Instagram: https://www.instagram.com/hansprknbeans/
+Facebook: https://www.facebook.com/hansprknbeans
+Email: sanmiguelhansernie@gmail.com
+Schedule a Call: https://calendly.com/sanmiguelhansernie/30min
+
+Instructions:
+- IMPORTANT: Each link must be on its own line with the platform name, colon, and URL
+- Use line breaks to separate each link
+- When users ask about Hans, refer to this information
+- Keep responses friendly, concise, and professional
+- If asked about contact or how to reach out, provide links in the organized format above with line breaks
+- If asked about skills or experience, reference the tech stack and experience sections`,
               },
               {
                 role: 'user',
@@ -158,7 +220,7 @@ export const ChatBot: React.FC = () => {
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                   }`}
                 >
-                  <p className="leading-relaxed">{msg.text}</p>
+                  <p className="leading-relaxed">{renderMessageWithLinks(msg.text)}</p>
                 </div>
               </div>
             ))}
