@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* Configure dark mode to use the 'dark' class on the html element */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Cursor styles for interactive elements */
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-default {
+  cursor: default !important;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed !important;
+}
+
+/* Ensure buttons show pointer cursor */
+button {
+  cursor: pointer;
+}
+
+/* Ensure links show pointer cursor */
+a {
+  cursor: pointer;
+}
+
+/* Disabled elements show not-allowed */
+button:disabled {
+  cursor: not-allowed;
+}
+
+input:disabled {
+  cursor: not-allowed;
+}
