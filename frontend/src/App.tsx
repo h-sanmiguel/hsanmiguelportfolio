@@ -1,4 +1,4 @@
-import { Mail, Phone, Users, Code, Briefcase, MapPin, Linkedin, Github, X, Link2, Instagram, Facebook } from 'lucide-react'
+import { Mail, Phone, Users, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook } from 'lucide-react'
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
