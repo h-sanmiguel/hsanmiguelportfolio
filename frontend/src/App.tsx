@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ChatBot } from './components/ChatBot'
 import { TechStackPage } from './pages/TechStackPage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { ProfileSkeleton, SectionSkeleton } from './components/SkeletonLoader'
 import './App.css'
 
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/tech-stack" element={<TechStackPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>
     </Router>
@@ -194,7 +196,7 @@ const HomePage = () => {
 
             {/* Projects Section */}
             {isLoading ? <SectionSkeleton /> : (
-            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in">
+            <section className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 rounded-2xl p-6 transition-colors card-hover fade-in lg:col-span-2">
               <div className="flex justify-between items-center gap-3 mb-4">
                 <h2 className="text-xl font-bold flex items-center gap-3 text-black dark:text-white">
                   <Code size={22} className="text-indigo-600 dark:text-indigo-400" />
@@ -214,7 +216,7 @@ const HomePage = () => {
                 )}
               </div>
               
-              <div className="space-y-4">
+              <div className="space-y-1">
                 {[
                   {
                     title: 'Appoint - Appointment Booking',
@@ -223,14 +225,12 @@ const HomePage = () => {
                     link: 'https://appoint-ptpt.onrender.com/'
                   },
                 ].map((project, idx) => (
-                  <div key={idx} className="border border-gray-300 dark:border-gray-700 rounded-lg p-4 hover:border-indigo-500 dark:hover:border-indigo-400 transition">
-                    <div className="flex justify-between items-start gap-2 mb-2">
-                      <h3 className="font-semibold text-sm text-black dark:text-white">{project.title}</h3>
-                    </div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">{project.description}</p>
-                    <div className="flex gap-2 flex-wrap mb-3">
+                  <div key={idx} className="border border-gray-300 dark:border-gray-700 rounded-lg p-2 hover:border-indigo-500 dark:hover:border-indigo-400 transition">
+                    <h3 className="font-semibold text-xs text-black dark:text-white mb-0.5">{project.title}</h3>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{project.description}</p>
+                    <div className="flex gap-1 flex-wrap mb-1">
                       {project.tech.map((t) => (
-                        <span key={t} className="px-2 py-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded text-xs font-medium">
+                        <span key={t} className="px-1.5 py-0 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded text-xs font-medium">
                           {t}
                         </span>
                       ))}

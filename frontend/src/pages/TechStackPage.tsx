@@ -1,6 +1,5 @@
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { ThemeToggle } from '../components/ThemeToggle'
 
 export const TechStackPage = () => {
   const navigate = useNavigate()
@@ -20,7 +19,6 @@ export const TechStackPage = () => {
             <ArrowLeft size={18} />
             Back
           </button>
-          <ThemeToggle />
         </div>
 
         {/* Title */}
