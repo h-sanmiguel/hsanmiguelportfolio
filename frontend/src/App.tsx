@@ -255,8 +255,8 @@ const HomePage = () => {
                 </h2>
                 
                 <div className="space-y-4">
-                  {[].length > 0 ? (
-                    [].map((testimonial, idx) => (
+                  {([] as Array<{ quote: string; author: string; role: string }>).length > 0 ? (
+                    ([] as Array<{ quote: string; author: string; role: string }>).map((testimonial, idx) => (
                       <div key={idx} className="border-l-4 border-purple-500 dark:border-purple-400 pl-4 py-2 bg-white dark:bg-gray-800 p-3 rounded">
                         <p className="text-xs text-gray-700 dark:text-gray-300 italic mb-2">\"{testimonial.quote}\"</p>
                         <p className="text-xs font-semibold text-gray-800 dark:text-gray-200\">{testimonial.author}</p>
