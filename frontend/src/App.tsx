@@ -234,6 +234,12 @@ const HomePage = () => {
               <div className="space-y-1">
                 {[
                   {
+                    title: 'motiv. - Minimalist Productivity App',
+                    description: 'A minimalist productivity application with task management, habit tracking, and Pomodoro timer. Features priority levels, streak tracking, and local data persistence.',
+                    tech: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'],
+                    link: 'https://motiv-tau.vercel.app'
+                  },
+                  {
                     title: 'Appoint - Appointment Booking',
                     description: 'A modern appointment booking application with video call and call features for scheduling and management.',
                     tech: ['React', 'Vite', 'JavaScript', 'Tailwind CSS'],
