@@ -37,6 +37,17 @@ const HomePage = () => {
   React.useEffect(() => {
     const fetchDailyQuotes = async () => {
       try {
+        // Get today's date as part of the cache key
+        const today = new Date().toDateString()
+        const cachedData = localStorage.getItem('dailyQuotes')
+        const cachedQuotes = cachedData ? JSON.parse(cachedData) : null
+
+        // If we have cached quotes from today, use them
+        if (cachedQuotes && cachedQuotes.date === today) {
+          setDailyQuotes(cachedQuotes.quotes)
+          return
+        }
+
         const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
           headers: {
@@ -48,7 +59,7 @@ const HomePage = () => {
             messages: [
               {
                 role: 'user',
-                content: 'Generate 3 unique and inspiring motivational quotes for today. Format each quote on a new line as: "Quote text" — Author Name. Only provide the 3 quotes, nothing else.',
+                content: `Generate 3 unique and inspiring motivational quotes for ${today}. Format each quote on a new line as: "Quote text" — Author Name. Only provide the 3 quotes, nothing else.`,
               },
             ],
             temperature: 0.8,
@@ -69,7 +80,11 @@ const HomePage = () => {
           return null
         }).filter((q: any) => q !== null)
 
-        setDailyQuotes(parsedQuotes.slice(0, 3))
+        const quotes = parsedQuotes.slice(0, 3)
+        setDailyQuotes(quotes)
+
+        // Cache the quotes with today's date
+        localStorage.setItem('dailyQuotes', JSON.stringify({ date: today, quotes }))
       } catch (error) {
         console.error('Failed to fetch quotes:', error)
         // Fallback quotes
