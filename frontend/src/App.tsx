@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import { ThemeToggle } from './components/ThemeToggle'
 import { ChatBot } from './components/ChatBot'
 import { TechStackPage } from './pages/TechStackPage'
+import { CertificationsPage } from './pages/CertificationsPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ProfileSkeleton, SectionSkeleton } from './components/SkeletonLoader'
 import './App.css'
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/tech-stack" element={<TechStackPage />} />
+          <Route path="/certifications" element={<CertificationsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </ThemeProvider>
@@ -35,40 +37,57 @@ const HomePage = () => {
   }, [])
 
   React.useEffect(() => {
+    const checkAndFetchQuotes = () => {
+      const today = new Date().toDateString()
+      const cachedData = localStorage.getItem('dailyQuotes')
+      const cachedQuotes = cachedData ? JSON.parse(cachedData) : null
+
+      // If we have cached quotes from today, use them
+      if (cachedQuotes && cachedQuotes.date === today) {
+        setDailyQuotes(cachedQuotes.quotes)
+        return
+      }
+
+      // Fetch new quotes
+      fetchDailyQuotes()
+    }
+
     const fetchDailyQuotes = async () => {
       try {
-        // Get today's date as part of the cache key
         const today = new Date().toDateString()
-        const cachedData = localStorage.getItem('dailyQuotes')
-        const cachedQuotes = cachedData ? JSON.parse(cachedData) : null
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY
 
-        // If we have cached quotes from today, use them
-        if (cachedQuotes && cachedQuotes.date === today) {
-          setDailyQuotes(cachedQuotes.quotes)
-          return
+        if (!apiKey) {
+          throw new Error('Gemini API key not configured')
         }
 
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'mixtral-8x7b-32768',
-            messages: [
-              {
-                role: 'user',
-                content: `Generate 3 unique and inspiring motivational quotes for ${today}. Format each quote on a new line as: "Quote text" — Author Name. Only provide the 3 quotes, nothing else.`,
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  parts: [
+                    {
+                      text: `Generate 3 unique and inspiring motivational quotes for ${today}. Format each quote on a new line as: "Quote text" — Author Name. Only provide the 3 quotes, nothing else.`,
+                    },
+                  ],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.8,
+                maxOutputTokens: 500,
               },
-            ],
-            temperature: 0.8,
-            max_tokens: 500,
-          }),
-        })
+            }),
+          }
+        )
 
         const data = await response.json()
-        const content = data.choices[0].message.content
+        const content = data.candidates[0].content.parts[0].text
 
         // Parse the quotes from the response
         const quoteLines = content.split('\n').filter((line: string) => line.trim().length > 0)
@@ -96,7 +115,30 @@ const HomePage = () => {
       }
     }
 
-    fetchDailyQuotes()
+    // Check and fetch quotes on mount
+    checkAndFetchQuotes()
+
+    // Set up midnight refresh
+    const setupMidnightRefresh = () => {
+      const now = new Date()
+      const tomorrow = new Date(now)
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      tomorrow.setHours(0, 0, 0, 0)
+
+      const timeUntilMidnight = tomorrow.getTime() - now.getTime()
+
+      const timeoutId = setTimeout(() => {
+        fetchDailyQuotes()
+        // After first midnight, set interval for every 24 hours
+        setInterval(fetchDailyQuotes, 24 * 60 * 60 * 1000)
+      }, timeUntilMidnight)
+
+      return timeoutId
+    }
+
+    const timeoutId = setupMidnightRefresh()
+
+    return () => clearTimeout(timeoutId)
   }, [])
 
   return (
@@ -407,13 +449,9 @@ const HomePage = () => {
               <Code size={22} className="text-amber-600 dark:text-amber-400" />
               Certifications
             </h2>
-            {[
-              { title: 'IT Essentials', issuer: 'Cisco Networking Academy', year: '2026' },
-            ].length > 4 && (
-              <Link to="/certifications" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-medium transition-colors cursor-pointer hover:underline">
-                View All
-              </Link>
-            )}
+            <Link to="/certifications" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-xs font-medium transition-colors cursor-pointer hover:underline">
+              View All
+            </Link>
           </div>
           
           <div className="space-y-2">
