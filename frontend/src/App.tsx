@@ -1,4 +1,4 @@
-import { Mail, Phone, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook, Quote } from 'lucide-react'
+import { Mail, Phone, Code, Briefcase, MapPin, Linkedin, Github, Link2, Instagram, Facebook, Quote, ArrowUp } from 'lucide-react'
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
@@ -29,6 +29,23 @@ const HomePage = () => {
   const [isHoveringProfile, setIsHoveringProfile] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
   const [dailyQuotes, setDailyQuotes] = React.useState<Array<{ text: string; author: string }>>([])
+  const [showScrollToTop, setShowScrollToTop] = React.useState(false)
+
+  const handleScrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollToTop(window.scrollY > 300)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   React.useEffect(() => {
     // Simulate loading time - remove this if you have real data loading
@@ -480,6 +497,17 @@ const HomePage = () => {
             <p>&copy; 2026 Hans San Miguel. All rights reserved.</p>
           </div>
         </footer>
+
+        {/* Return to Top Button */}
+        {showScrollToTop && (
+          <button
+            onClick={handleScrollToTop}
+            className="fixed bottom-8 left-1/2 transform -translate-x-1/2 p-2 bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 text-white dark:text-black rounded-full transition fade-in z-50"
+            aria-label="Return to top"
+          >
+            <ArrowUp size={18} />
+          </button>
+        )}
       </div>
     </div>
   )
